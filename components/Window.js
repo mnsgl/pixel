@@ -1,0 +1,3 @@
+export default function Window({ children, className }) {
+  return <div className={className}>{children}</div>;
+}
