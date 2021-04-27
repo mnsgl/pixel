@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import Pane from "../components/Pane";
+import Tools from "../components/Tools";
 
 export default function Home() {
   const [color, setColor] = React.useState("rgb(0, 0, 0)");
@@ -23,6 +24,7 @@ export default function Home() {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Tools />
       <Pane />
     </div>
   );
