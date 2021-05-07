@@ -2,3 +2,9 @@
     box-sizing: border-box;
     user-select: none;
 }
+.scroll-hidden-from-css-file::-webkit-scrollbar {
+    display: none;
+}
+.scroll-hidden-from-css-file {
+    scrollbar-width: none;
+}

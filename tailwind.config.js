@@ -6,9 +6,14 @@ module.exports = {
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    fontFamily: {
+      ruda: ["Ruda"],
+    },
     extend: {
       spacing: {
         136: "36rem",
+        15: "3.25rem",
+        0.25: "1px",
       },
     },
     container: {
@@ -20,7 +25,9 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      cursor: ["hover"],
+    },
   },
   plugins: [],
 };
