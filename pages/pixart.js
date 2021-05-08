@@ -4,7 +4,7 @@ import Pane from "../components/Pane";
 import Tools from "../components/Tools";
 import React from "react";
 import ColorBar from "../components/ColorBar";
-export default function PixArt() {
+export default function PixArt({ pname }) {
   return (
     <div>
       <Window>
@@ -13,7 +13,7 @@ export default function PixArt() {
         */}
         <ColorBar />
         <Tools />
-        <Pane />
+        <Pane pname={pname} />
       </Window>
     </div>
   );

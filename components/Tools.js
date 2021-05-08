@@ -2,7 +2,7 @@ import React from "react";
 import { decrease, increase } from "../app/features/size/sizeSlice";
 import { useDispatch } from "react-redux";
 import { clear, setEraser } from "../app/features/clear/clearSlice";
-import { setIncreaseSaveValue } from "../app/features/save/saveSlice";
+import { setIncreaseSaveValue } from "../app/features/project/projectSlice";
 import { BiEraser } from "react-icons/bi";
 import { BsArrowsMove } from "react-icons/bs";
 import {

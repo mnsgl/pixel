@@ -4,45 +4,44 @@ import dragElement from "./Drag";
 import { active, deactive } from "../app/features/draw/drawSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function Pane() {
-  const [draw, setDraw] = React.useState(false);
-  const ePoint = useSelector((state) => state.point.ePoint.payload);
-  const isActive = useSelector((state) => state.draw.isActive);
-  const sPoint = useSelector((state) => state.point.sPoint.payload);
+export default function Pane({ pname }) {
+  const [size, setSize] = React.useState([]);
+  const project = useSelector((state) => state.project.projects).filter(
+    (proj) => proj.pname === pname
+  )[0];
   const dispatch = useDispatch();
   let dragDiv = React.useRef(null);
-  let color = "rgb(0, 254, 0)";
-  const arr = [...Array(32).keys()];
-
-  const drawRect = () => {};
 
   React.useEffect(() => {
     //document.addEventListener("wheel", setSize, { passive: false });
     //document.getElementsByTagName("html")[0].style.backgroundColor = "#5A7578";
     document.getElementsByTagName("html")[0].style.backgroundColor = "#fff";
   }, []);
+
   React.useEffect(() => {
-    if (isActive) {
-      drawRect();
+    if (project) {
+      setSize([...Array(project.psize[0]).keys()]);
     }
-  }, [isActive, sPoint, ePoint]);
-  return (
+  }, [project]);
+
+  return project ? (
     <div
       onMouseDown={() => dispatch(active())}
       onMouseUp={() => dispatch(deactive())}
       ref={dragDiv}
       className="flex flex-col items-center mt-56 mb-56"
-      //set this div height according to sum of all pixel
       //className="z-20 absolute border-solid border-8 border-green-600 cursor-move"
     >
-      {arr.map((row, i) => (
+      {size.map((row, i) => (
         <Row key={i}>
-          {arr.map((col, j) => (
-            <Pix key={j} loc={{ row: i + 1, col: j + 1 }} />
+          {size.map((col, j) => (
+            <Pix key={j} project={project} loc={{ row: i + 1, col: j + 1 }} />
           ))}
         </Row>
       ))}
     </div>
+  ) : (
+    <div>test</div>
   );
 }
 
