@@ -32,7 +32,7 @@ export const projectSlice = createSlice({
       },
       {
         pname: "deneme",
-        psize: [16, 16],
+        psize: [64, 64],
         pdate: "18/08/1998",
         cellColors: {
           14: "white",

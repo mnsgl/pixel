@@ -8,6 +8,7 @@ import shapeReducer from "./features/shape/shapeSlice";
 import colorReducer from "./features/color/colorSlice";
 import saveReducer from "./features/save/saveSlice";
 import projectReducer from "./features/project/projectSlice";
+import stackReducer from "./features/stack/stackSlice";
 
 export default configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export default configureStore({
     color: colorReducer,
     save: saveReducer,
     project: projectReducer,
+    stack: stackReducer,
   },
 });

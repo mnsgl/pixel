@@ -3,9 +3,11 @@ import { decrease, increase } from "../app/features/size/sizeSlice";
 import { useDispatch } from "react-redux";
 import { clear, setEraser } from "../app/features/clear/clearSlice";
 import { setIncreaseSaveValue } from "../app/features/project/projectSlice";
+import { getFromStack } from "../app/features/stack/stackSlice";
 import { BiEraser } from "react-icons/bi";
 import { BsArrowsMove } from "react-icons/bs";
 import {
+  AiOutlineRollback,
   AiOutlineZoomIn,
   AiOutlineZoomOut,
   AiOutlineClear,
@@ -20,6 +22,10 @@ export default function Tools() {
   React.useEffect(() => {
     dragElement(dragParent.current, dragChild.current);
   }, []);
+
+  function setStack(e) {
+    dispatch(getFromStack());
+  }
 
   const handleClick = (e, effect) => {
     if (effect === "eraser") {
@@ -70,6 +76,12 @@ export default function Tools() {
       <div>
         <AiOutlineSave
           onClick={() => dispatch(setIncreaseSaveValue())}
+          className="h-10 rounded-md w-10 flex items-center justify-center cursor-pointer ml-1 mt-1 "
+        />
+      </div>
+      <div>
+        <AiOutlineRollback
+          onClick={(e) => setStack(e)}
           className="h-10 rounded-md w-10 flex items-center justify-center cursor-pointer ml-1 mt-1 "
         />
       </div>

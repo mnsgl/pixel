@@ -1,14 +1,17 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setProjectCellColors } from "../app/features/project/projectSlice";
+import { addToStack } from "../app/features/stack/stackSlice";
 
 function Pix({ loc, project }) {
+  const index = `${loc.row}${loc.col}`;
   const isActive = useSelector((state) => state.draw.isActive);
   const color = useSelector((state) => state.color.color);
   const size = useSelector((state) => state.size.size);
   const save = useSelector((state) => state.project.save);
   const clearCount = useSelector((state) => state.clear.clearCount);
   const eraser = useSelector((state) => state.clear.eraser);
+  const stack_cur_val = useSelector((state) => state.stack.cur_value);
 
   const dispatch = useDispatch();
   const ref = React.useRef(null);
@@ -16,16 +19,22 @@ function Pix({ loc, project }) {
   const changeColor = (e, click = null) => {
     if (window.event.which === 1 && isActive) {
       if (eraser) {
+        dispatch(
+          addToStack({ index, color: ref.current.style.backgroundColor })
+        );
         ref.current.style.backgroundColor = "#5A7578";
         return;
       }
+      dispatch(addToStack({ index, color: ref.current.style.backgroundColor }));
       ref.current.style.backgroundColor = color;
+      return;
     }
     if (click) {
       if (eraser) {
         ref.current.style.backgroundColor = "#5A7578";
         return;
       }
+      dispatch(addToStack({ index, color: ref.current.style.backgroundColor }));
       ref.current.style.backgroundColor = color;
     }
   };
@@ -35,7 +44,6 @@ function Pix({ loc, project }) {
   }, [clearCount]);
 
   React.useEffect(() => {
-    let index = `${loc.row}${loc.col}`;
     if (project.cellColors[parseInt(index)]) {
       ref.current.style.backgroundColor = project.cellColors[parseInt(index)];
     }
@@ -44,12 +52,17 @@ function Pix({ loc, project }) {
   React.useEffect(() => {
     let cellColor = ref.current.style.backgroundColor;
     if (cellColor !== "rgb(90, 117, 120)") {
-      let index = `${loc.row}${loc.col}`;
       dispatch(
         setProjectCellColors({ index, cellColor, pname: project.pname })
       );
     }
   }, [save]);
+
+  React.useEffect(() => {
+    if (stack_cur_val && stack_cur_val[index]) {
+      ref.current.style.backgroundColor = stack_cur_val[index];
+    }
+  }, [stack_cur_val]);
 
   return (
     <div
