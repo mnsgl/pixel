@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 const errMessage = (text) => {
   return (
     <p className="text-center text-white text-lg border-2 p-2 bg-red-500 rounded-lg -mb-3 -mt-3 placeholder-gray-500 placeholder-opacity-5 ">
@@ -8,9 +9,10 @@ const errMessage = (text) => {
 };
 
 export default function Register() {
+  const router = useRouter();
   const validate = (values) => {
     const getInfo = {};
-    const { name, mail, pass } = values;
+    const { name, email, password } = values;
     const errors = {};
     if (!name) {
       errors.name = "Required";
@@ -19,31 +21,46 @@ export default function Register() {
     } else if (name === getInfo.name) {
       errors.name = "Try a different username";
     }
-    if (!mail) {
-      errors.mail = "Required";
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(mail)) {
-      errors.mail = "Invalid mail address";
-    } else if (mail === getInfo.mail) {
-      errors.mail = "Try a different mail";
+    if (!email) {
+      errors.email = "Required";
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+      errors.email = "Invalid mail address";
+    } else if (email === getInfo.email) {
+      errors.email = "Try a different mail";
     }
-    if (!pass) {
-      errors.pass = "Required";
-    } else if (pass.length < 6 || pass.length >= 25) {
-      errors.pass = "Password length must be min 6 and max 25 character ";
+    if (!password) {
+      errors.password = "Required";
+    } else if (password.length < 6 || password.length >= 25) {
+      errors.password = "Password length must be min 6 and max 25 character ";
     }
     return errors;
+  };
+
+  const registerUser = async (values) => {
+    const response = await fetch("http://localhost:5000/api/user/signup", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    if (response.status === 400) {
+      // ERROR
+      console.log("failed");
+    }
+    if (response.status === 201) {
+      router.push("/login");
+    }
   };
 
   const formik = useFormik({
     initialValues: {
       name: "",
-      mail: "",
-      pass: "",
+      email: "",
+      password: "",
     },
     validate,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values.null, 2));
-    },
+    onSubmit: registerUser,
   });
   return (
     <div className="container h-screen flex">
@@ -71,25 +88,25 @@ export default function Register() {
             className="w-full outline-none h-14 rounded-md pl-5 pr-5 text-xl border-2 focus:border-blue-700 transition duration-200 ease-in-out"
             placeholder="E-mail"
             type="text"
-            name="mail"
-            value={formik.values.mail}
+            name="email"
+            value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-          {formik.touched.mail && formik.errors.mail
-            ? errMessage(formik.errors.mail)
+          {formik.touched.email && formik.errors.email
+            ? errMessage(formik.errors.email)
             : null}
           <input
             className="w-full outline-none h-14 rounded-md pl-5 pr-5 text-xl border-2 focus:border-blue-700 transition duration-200 ease-in-out"
             placeholder="Password"
             type="text"
-            name="pass"
-            value={formik.values.pass}
+            name="password"
+            value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-          {formik.touched.pass && formik.errors.pass
-            ? errMessage(formik.errors.pass)
+          {formik.touched.password && formik.errors.password
+            ? errMessage(formik.errors.password)
             : null}
           <button
             type="submit"

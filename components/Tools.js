@@ -35,6 +35,9 @@ export default function Tools() {
     if (effect === "clear") {
       dispatch(clear());
     }
+    if (effect === "save") {
+      dispatch(setIncreaseSaveValue());
+    }
   };
 
   return (
@@ -75,7 +78,7 @@ export default function Tools() {
       </div>
       <div>
         <AiOutlineSave
-          onClick={() => dispatch(setIncreaseSaveValue())}
+          onClick={() => handleClick(e, "save")}
           className="h-10 rounded-md w-10 flex items-center justify-center cursor-pointer ml-1 mt-1 "
         />
       </div>

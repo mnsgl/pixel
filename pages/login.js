@@ -1,4 +1,7 @@
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { setUser } from "../app/features/user/userSlice";
 const errMessage = (text) => {
   return (
     <p className="text-center text-white text-lg border-2 p-2 bg-red-500 rounded-lg -mb-3 -mt-3 placeholder-gray-500 placeholder-opacity-5 ">
@@ -6,32 +9,54 @@ const errMessage = (text) => {
     </p>
   );
 };
+
 export default function Login() {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const validate = (values) => {
-    const { name, pass } = values;
+    const { name, password } = values;
     const errors = {};
     if (!name) {
       errors.name = "Required";
     } else if (name.length < 6 || name.length >= 15) {
       errors.pass = "Username length must be min 6 and max 15 character ";
     }
-    if (!pass) {
-      errors.pass = "Required";
-    } else if (pass.length < 6 || pass.length >= 25) {
-      errors.pass = "Password length must be min 6 and max 25 character ";
+    if (!password) {
+      errors.password = "Required";
+    } else if (password.length < 6 || password.length >= 25) {
+      errors.password = "Password length must be min 6 and max 25 character ";
     }
     return errors;
+  };
+
+  const loginUser = async (values) => {
+    const url = `/${values.name}/${values.password}`;
+    const response = await fetch(
+      "http://localhost:5000/api/user/signin" + url,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
+    if (response.status === 200) {
+      let res = await response.json();
+      dispatch(setUser(res));
+    } else {
+      // ERROR
+      return;
+    }
+    router.push("/projects");
   };
 
   const formik = useFormik({
     initialValues: {
       name: "",
-      pass: "",
+      password: "",
     },
     validate,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values.null, 2));
-    },
+    onSubmit: loginUser,
   });
   return (
     <div className="container h-screen flex">
@@ -59,13 +84,13 @@ export default function Login() {
             className="w-full outline-none h-14 rounded-md pl-5 pr-5 text-xl border-2 focus:border-blue-700 transition duration-200 ease-in-out"
             placeholder="Password"
             type="text"
-            name="pass"
-            value={formik.values.pass}
+            name="password"
+            value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-          {formik.touched.pass && formik.errors.pass
-            ? errMessage(formik.errors.pass)
+          {formik.touched.password && formik.errors.password
+            ? errMessage(formik.errors.password)
             : null}
           <button
             type="submit"

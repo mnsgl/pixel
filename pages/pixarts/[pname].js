@@ -8,7 +8,7 @@ export default function Project() {
   const projects = useSelector((state) => state.project.projects);
   let res = projects.filter((proj) => proj.pname === pname);
   if (res) {
-    return <PixArt pname={pname} />;
+    return <PixArt pId={res[0]._id} pname={pname} />;
   } else {
     return <p>Page not found</p>;
   }

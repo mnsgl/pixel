@@ -1,12 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setColor, addColors } from "../app/features/color/colorSlice.js";
+import {
+  setColor,
+  addColors,
+  setColors,
+} from "../app/features/color/colorSlice.js";
+//import from '../app/features/save/saveSlice'
 import { SketchPicker } from "react-color";
 import React from "react";
 
-export default function ColorBar() {
+export default function ColorBar({ pId }) {
   const [show, setShow] = React.useState(false);
   const [background, setBackground] = React.useState("#fff");
   const colors = useSelector((state) => state.color.colors);
+  const saveCounter = useSelector((state) => state.save.save);
   const ref = React.useRef(null);
   const dispatch = useDispatch();
 
@@ -25,6 +31,14 @@ export default function ColorBar() {
       }
     }
   }, [background]);
+
+  React.useEffect(() => {
+    fetch("http://localhost:5000/api/color/" + pId)
+      .then((res) => res.json())
+      .then((res) => {
+        dispatch(setColors(res?.clrs[0]?.colors));
+      });
+  }, []);
 
   return (
     <div className="top-3 left-1/2 w-1/2 h-12 transform -translate-x-1/2 flex justify-between rounded-md bg-gray-50 shadow-md sticky gap-3">
